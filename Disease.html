@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disease Prediction System</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef2f3;
+            padding: 30px;
+        }
+        .container {
+            width: 420px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #999;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result, .error {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+        }
+        .result {
+            background: #e6ffed;
+            border: 1px solid #44b678;
+            color: #1b6d3c;
+        }
+        .error {
+            background: #ffe6e6;
+            border: 1px solid #ff5c5c;
+            color: #a42424;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Disease Prediction</h2>
+
+    <form action="/predict" method="POST">
+        
+        <label>Age:</label>
+        <input type="number" name="age" value="{{ last_input.age if last_input else '' }}" required>
+
+        <label>Gender:</label>
+        <select name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male" {% if last_input and last_input.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if last_input and last_input.gender == 'Female' %}selected{% endif %}>Female</option>
+            <option value="Other" {% if last_input and last_input.gender == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+
+        <label>Symptoms (comma separated):</label>
+        <textarea name="symptoms" rows="3" required placeholder="fever, headache, cough">{{ last_input.symptoms if last_input else '' }}</textarea>
+
+        <label>Symptom Count:</label>
+        <input type="number" name="symptom_count" value="{{ last_input.symptom_count if last_input else '' }}" required>
+
+        <button type="submit">Predict Disease</button>
+    </form>
+
+    {% if result %}
+        <div class="result">
+            Predicted Disease: <strong>{{ result }}</strong>
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
